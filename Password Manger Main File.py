@@ -17,6 +17,12 @@ window = Tk()
 
 window.title("Passwortmanager")
 
+def hashPassword(input):
+    hash = hashlib.md5(input)
+    hash = hash.hexdigest()
+
+    return hash
+
 def firstScreen():
     window.geometry("250x150")
 
@@ -41,7 +47,7 @@ def firstScreen():
 
     def savePassword():
         if txt.get() == txt1.get():
-            hashedPassword = txt.get()
+            hashedPassword = hashPassword(txt.get().encode('utf-8'))
 
             insert_password = """INSERT INTO masterpassword(password)
             VALUES(?)"""
@@ -72,12 +78,15 @@ def loginflaeche():
     lbl1.pack()
 
     def getMasterPassword():
-        checkHashedPassword = txt.get()
-        cursor.excecute("SELECT * FROM masterpassword WHERE id = 1 AND password = ?, [(checkedHashedPassword)]")
+        checkHashedPassword = hashPassword(txt.get().encode('utf-8'))
+        cursor.excecute("SELECT * FROM masterpassword WHERE id = 1 AND password = ?", [(checkHashedPassword)])
+        print(checkHashedPassword)
         return cursor.fetchall()
 
     def checkPassword():
-        match = getMasterPassword()
+        match = getMasterPassword
+
+        print (match)
 
         if match:
             passwordVault()
