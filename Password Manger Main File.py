@@ -1,9 +1,11 @@
+
+   
 import sqlite3, hashlib
 from sqlite3.dbapi2 import Cursor
 from tkinter import *
 
 #Database Code
-with sqlite3.connect("password_datenbank.db") as db:
+with sqlite3.connect("password_vault.db") as db:
     cursor = db.cursor()
 
 cursor.execute("""
@@ -50,7 +52,7 @@ def firstScreen():
             hashedPassword = hashPassword(txt.get().encode('utf-8'))
 
             insert_password = """INSERT INTO masterpassword(password)
-            VALUES(?)"""
+            VALUES(?) """
             cursor.execute(insert_password, [(hashedPassword)])
             db.commit()
 
@@ -79,14 +81,12 @@ def loginflaeche():
 
     def getMasterPassword():
         checkHashedPassword = hashPassword(txt.get().encode('utf-8'))
-        cursor.excecute("SELECT * FROM masterpassword WHERE id = 1 AND password = ?", [(checkHashedPassword)])
-        print(checkHashedPassword)
+        cursor.execute("SELECT * FROM masterpassword WHERE id = 1 AND password = ?", [(checkHashedPassword)])
+
         return cursor.fetchall()
 
     def checkPassword():
-        match = getMasterPassword
-
-        print (match)
+        match = getMasterPassword()
 
         if match:
             passwordVault()
@@ -114,4 +114,6 @@ if cursor.fetchall():
     loginflaeche()
 else:
     firstScreen()
+
+
 window.mainloop()
